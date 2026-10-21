@@ -64,18 +64,15 @@ Visit **[http://localhost:5001](http://localhost:5001)** in your web browser.
 
 ## 🌐 Deploy to Production (Make it Public)
 
-You can host this application online for free on **Render.com**:
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Akshay05082002/AI_Diet_Planner)
 
-1. Push this repository to **GitHub**.
-2. Sign up / Log in to [Render](https://render.com).
-3. Click **New +** → **Web Service**.
-4. Connect your GitHub repository.
-5. Configure the settings:
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-6. Click **Deploy Web Service**!
-7. Once finished, Render will provide a free live public URL (e.g. `https://your-diet-planner.onrender.com`).
+You can host this application online for free on **Render.com** with just 1 click:
+
+1. Click the **Deploy to Render** button above (or open [render.com/deploy?repo=https://github.com/Akshay05082002/AI_Diet_Planner](https://render.com/deploy?repo=https://github.com/Akshay05082002/AI_Diet_Planner)).
+2. Sign in with GitHub (`Akshay05082002`).
+3. Click **Apply** or **Deploy**.
+4. Render automatically configures everything using `render.yaml` and deploys your service.
+5. In 2-3 minutes, your live public URL will be ready!
 
 ---
 
