@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Diet Plan | AI Diet Planner{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+  <div>
+    <h2 class="section-title">🥗 AI Diet Plan</h2>
+    <p class="text-muted">Personalized meal recommendations based on your profile.</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{{ url_for('download_pdf_plan') }}" class="btn btn-success btn-custom">
+      <i class="fas fa-file-pdf me-2"></i>Download PDF
+    </a>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-custom">
+      <i class="fas fa-arrow-left me-2"></i>Back
+    </a>
+  </div>
+</div>
+
+<p class="text-muted mb-3"><strong>User:</strong> {{ fullname }}</p>
+
+<div class="main-card p-4 mb-4">
+  <p><strong>BMI:</strong> {{ bmi }} ({{ bmi_cat }})</p>
+  <p><strong>Target Calories:</strong> {{ cal_target }}</p>
+
+  <div class="row mt-4 g-3">
+    <div class="col-md-3">
+      <div class="stat-card calories p-4 text-white text-center">
+        <h5 class="mb-2"><i class="fas fa-fire"></i> Calories</h5>
+        <h4>{{ plan.get('total_calories', '--') }}</h4>
+        <p class="small mb-0">100%</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card protein p-4 text-white text-center">
+        <h5 class="mb-2"><i class="fas fa-dumbbell"></i> Protein</h5>
+        <h4>{{ plan.get('total_protein', '--') }} g</h4>
+        <p class="small mb-0">
+          {% if plan.get('total_calories') and plan.get('total_protein') %}
+            {{ ((plan.get('total_protein', 0) * 4 / plan.get('total_calories', 1)) * 100) | round(1) }}%
+          {% else %}
+            --
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card carbs p-4 text-white text-center">
+        <h5 class="mb-2"><i class="fas fa-bread-slice"></i> Carbs</h5>
+        <h4>{{ plan.get('total_carbs', '--') }} g</h4>
+        <p class="small mb-0">
+          {% if plan.get('total_calories') and plan.get('total_carbs') %}
+            {{ ((plan.get('total_carbs', 0) * 4 / plan.get('total_calories', 1)) * 100) | round(1) }}%
+          {% else %}
+            --
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="stat-card fat p-4 text-white text-center">
+        <h5 class="mb-2"><i class="fas fa-cheese"></i> Fat</h5>
+        <h4>{{ plan.get('total_fat', '--') }} g</h4>
+        <p class="small mb-0">
+          {% if plan.get('total_calories') and plan.get('total_fat') %}
+            {{ ((plan.get('total_fat', 0) * 9 / plan.get('total_calories', 1)) * 100) | round(1) }}%
+          {% else %}
+            --
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-4">
+  {% if plan and plan.get('meals') %}
+    {% for meal, data in plan.get('meals', {}).items() %}
+  <div class="card meal-card p-4 mb-3">
+    <h4 class="meal-title">🍽 {{ meal.capitalize() }}</h4>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <p><strong>Food:</strong> {{ data.get('name', 'N/A') }}</p>
+        <p><strong>Calories:</strong> {{ data.get('cal', '--') }}</p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Protein:</strong> {{ data.get('protein', '--') }} g</p>
+        <p><strong>Carbs:</strong> {{ data.get('carbs', '--') }} g</p>
+        <p><strong>Fat:</strong> {{ data.get('fat', '--') }} g</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+    <div class="alert alert-warning">No diet plan data available. Please generate a plan from your dashboard.</div>
+  {% endif %}
+</div>
+
+<div class="text-center mt-4">
+  <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg btn-custom">
+    <i class="fas fa-chart-line me-2"></i>Back to Dashboard
+  </a>
+</div>
+{% endblock %}

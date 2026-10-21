@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Calories Tracker | AI Diet Planner{% endblock %}
+
+{% block content %}
+<div class="calories-container mx-auto" style="max-width:1100px;">
+  <div class="calories-hero d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+    <div>
+      <h4 class="mb-2"><i class="fas fa-leaf"></i> Nutrition Tracker Pro</h4>
+      <small style="font-size:1rem;opacity:0.95">AI-powered meal logging & daily calorie insights</small>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <a href="/dashboard" class="btn btn-light" style="border-radius:12px;font-weight:600;"><i class="fas fa-arrow-left"></i> Dashboard</a>
+      <a href="/download-pdf" class="btn btn-info" style="border-radius:12px;font-weight:600;"><i class="fas fa-file-pdf"></i> Download PDF</a>
+      <a href="/logout" class="btn btn-outline-light" style="border-radius:12px;font-weight:600;border:2px solid white;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" style="border-radius:12px;border:none;box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% else %}info-circle{% endif %}"></i> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card cal-card p-4">
+        <h5 class="cal-header mb-4"><i class="fas fa-utensils"></i> Add Meal Entry</h5>
+        <form action="/calories/add" method="post" class="row g-3 align-items-end">
+          <div class="col-md-6">
+            <label class="form-label">Food / Activity</label>
+            <input name="name" class="form-control" placeholder="e.g., Grilled Chicken Salad" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Calories</label>
+            <input name="calories" type="number" class="form-control" placeholder="Auto-estimate if empty">
+          </div>
+          <div class="col-md-3 d-grid">
+            <button class="btn btn-success" type="submit" style="padding:12px;"><i class="fas fa-plus"></i> Add Entry</button>
+          </div>
+        </form>
+
+        <div class="mt-4 d-flex flex-wrap gap-3">
+          <form action="/calories/autogen" method="post" class="flex-grow-1">
+            <button class="btn btn-outline-primary w-100" type="submit" style="padding:12px;"><i class="fas fa-robot"></i> AI Generate Day Plan</button>
+          </form>
+          <form action="/calories/reset" method="post" class="flex-grow-1">
+            <button class="btn btn-outline-danger w-100" type="submit" style="padding:12px;"><i class="fas fa-trash"></i> Clear All</button>
+          </form>
+        </div>
+
+        <form action="/calories/upload" method="post" enctype="multipart/form-data" class="mt-3">
+          <div class="input-group">
+            <input type="file" name="plate_image" accept="image/*" class="form-control">
+            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-camera"></i> Upload Photo</button>
+          </div>
+          <small class="text-muted">Upload a meal photo; AI will try to detect items (prototype).</small>
+        </form>
+
+        <hr class="my-4">
+
+        <h5 class="cal-header mb-3"><i class="fas fa-list"></i> Today's Meals</h5>
+
+        {% if entries and entries|length > 0 %}
+        <div class="table-responsive">
+          <table class="table cal-table">
+            <thead>
+              <tr style="border-bottom:2px solid #667eea;">
+                <th style="color:#667eea;font-weight:700;"><i class="fas fa-hashtag"></i></th>
+                <th style="color:#667eea;font-weight:700;"><i class="fas fa-apple-alt"></i> Item</th>
+                <th class="text-end" style="color:#667eea;font-weight:700;"><i class="fas fa-fire"></i> Calories</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in entries %}
+              <tr>
+                <td class="text-muted fw-600">{{ loop.index }}</td>
+                <td><strong style="color:#333;">{{ e.name }}</strong></td>
+                <td class="text-end"><span class="badge badge-goal">{{ e.calories }} kcal</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+          <div class="text-center py-5" style="color:#999;">
+            <i class="fas fa-inbox" style="font-size:3rem;margin-bottom:15px;opacity:0.3;"></i>
+            <p class="mt-3">No meals logged yet. Add an entry or generate a plan with AI!</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="summary-card p-4">
+        <h5 class="mb-4" style="color:#333;font-weight:700;"><i class="fas fa-chart-pie"></i> Daily Summary</h5>
+        <div class="stat-box mb-4">
+          <p class="stat-label">Total Consumed</p>
+          <p class="stat-value">{{ total }}</p>
+          <p class="stat-label">kilocalories</p>
+        </div>
+
+        {% if cal_goal %}
+          <div class="mb-4 p-3" style="background:rgba(102,126,234,0.05);border-radius:15px;border-left:4px solid #667eea;">
+            <p class="small" style="color:#667eea;font-weight:600;margin-bottom:8px;"><i class="fas fa-target"></i> Daily Target</p>
+            <p style="font-size:1.3rem;font-weight:700;color:#333;margin:0;">{{ cal_goal }} kcal</p>
+          </div>
+          {% set pct = 0 %}
+          {% if cal_goal %}
+            {% set pct = (total / cal_goal) * 100 %}
+            {% if pct > 100 %}{% set pct = 100 %}{% endif %}
+          {% endif %}
+          <div class="mb-4">
+            <div class="d-flex justify-content-between mb-2" style="font-weight:600;color:#333;">
+              <span><i class="fas fa-percentage"></i> Progress</span>
+              <span class="badge badge-goal">{{ pct|round(0) }}%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: {{ pct|round(0) }}%" aria-valuenow="{{ total }}" aria-valuemin="0" aria-valuemax="{{ cal_goal }}" aria-label="Calories progress"></div>
+            </div>
+            <p class="small text-muted mt-2">{{ total }} / {{ cal_goal }} kcal consumed</p>
+          </div>
+        {% endif %}
+
+        <hr>
+
+        <h6 class="mb-3" style="color:#333;font-weight:700;"><i class="fas fa-cog"></i> Custom Goal</h6>
+        <form action="/calories/set_goal" method="post" class="d-flex gap-2 mb-3">
+          <input name="custom_goal" type="number" min="1" class="form-control" placeholder="Enter custom kcal" value="{% if custom_goal %}{{ custom_goal }}{% endif %}" style="border-radius:12px;">
+          <button class="btn btn-primary" type="submit" style="border-radius:12px;background:#667eea;border:none;font-weight:600;padding:10px 20px;"><i class="fas fa-check"></i> Set</button>
+        </form>
+
+        {% if custom_goal %}
+        <form action="/calories/clear_goal" method="post" class="mb-3">
+          <button class="btn btn-outline-secondary w-100" type="submit" style="border-radius:12px;font-weight:600;padding:10px;"><i class="fas fa-times"></i> Clear Custom Goal</button>
+        </form>
+        {% endif %}
+
+        <div class="pro-tip">
+          <p class="small mb-2"><i class="fas fa-lightbulb"></i> Pro Tips</p>
+          <ul class="small" style="margin:0;padding-left:20px;color:#555;line-height:1.6;">
+            <li>Leave calories blank for AI auto-estimate</li>
+            <li>Use "AI Generate" for full day plan</li>
+            <li>Custom goal overrides profile target</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

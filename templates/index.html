@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Diet Planner{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+  <h1 class="display-5 mb-3">🥗 AI Diet Planner & Caloies Tracker</h1>
+  <p class="lead text-muted mb-4">Generate personalized diet plans using AI logic (BMR + TDEE).</p>
+
+  <div class="d-flex justify-content-center flex-wrap gap-3 mb-5">
+    <a href="/register" class="btn btn-primary btn-lg btn-custom">Register</a>
+    <a href="/login" class="btn btn-outline-primary btn-lg btn-custom">Login</a>
+  </div>
+
+  <div class="row gy-4">
+    <div class="col-md-4">
+      <div class="feature-box text-center">
+        <h5 class="mb-3">🔥 BMR Calculator</h5>
+        <p class="text-muted">Calculate your Basal Metabolic Rate instantly.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-box text-center">
+        <h5 class="mb-3">⚡ TDEE Estimation</h5>
+        <p class="text-muted">Know your total daily calorie needs based on activity level.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-box text-center">
+        <h5 class="mb-3">🥦 Smart Meal Plans</h5>
+        <p class="text-muted">AI-generated personalized diet recommendations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-box text-center">
+    <h5 class="mb-3">🍽️ Calories Tracker</h5>
+    <p class="text-muted">Quickly log meals and track daily calories and progress toward your goal.</p>
+    <a href="/calories" class="btn btn-success btn-custom mt-3">Open Tracker</a>
+  </div>
+
+  <div class="mt-5 auth-card bmi-card text-start mx-auto">
+    <h4 class="auth-header">Quick BMI Calculator</h4>
+    <form id="bmiForm" class="row g-3 align-items-end justify-content-center">
+      <div class="col-12 col-md-4">
+        <label class="form-label" for="weight">Weight (kg)</label>
+        <input type="number" id="weight" class="form-control" placeholder="Weight (kg)">
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label" for="height">Height (cm)</label>
+        <input type="number" id="height" class="form-control" placeholder="Height (cm)">
+      </div>
+      <div class="col-12 col-md-4 d-grid">
+        <button type="submit" class="btn btn-primary btn-custom">Calculate</button>
+      </div>
+    </form>
+    <div class="mt-4" id="bmiResult"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const bmiForm = document.getElementById('bmiForm');
+  const result = document.getElementById('bmiResult');
+
+  bmiForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const weight = Number(document.getElementById('weight').value);
+    const height = Number(document.getElementById('height').value);
+
+    if (!weight || !height) {
+      result.textContent = 'Please enter both values.';
+      result.className = 'text-danger';
+      return;
+    }
+
+    const heightMeters = height / 100;
+    const bmi = (weight / (heightMeters * heightMeters)).toFixed(2);
+    let category = '';
+
+    if (bmi < 18.5) category = 'Underweight';
+    else if (bmi < 24.9) category = 'Normal Weight';
+    else if (bmi < 29.9) category = 'Overweight';
+    else category = 'Obese';
+
+    result.textContent = `Your BMI is ${bmi} (${category})`;
+    result.className = 'text-success';
+  });
+});
+</script>
+{% endblock %}

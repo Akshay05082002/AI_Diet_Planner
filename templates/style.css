@@ -1,0 +1,125 @@
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6f9;
+  margin:0;
+}
+
+/* Header */
+.header{
+  background:#4CAF50;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.dark-btn{
+  padding:8px 15px;
+  border:none;
+  cursor:pointer;
+}
+
+/* Container */
+.container{
+  max-width:600px;
+  margin:40px auto;
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+}
+
+.generate-btn{
+  background:#4CAF50;
+  color:white;
+  border:none;
+  padding:12px;
+  width:100%;
+  cursor:pointer;
+  font-size:16px;
+}
+
+/* Result Section */
+.result-section{
+  max-width:800px;
+  margin:20px auto;
+}
+
+.diet-card{
+  background:white;
+  padding:15px;
+  margin:10px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Stat Card Colors */
+.calories { background-color: #ff4757; }
+.protein { background-color: #2e86de; }
+.carbs { background-color: #2ecc71; }
+.fat { background-color: #ffa502; }
+
+/* Dark Mode */
+.dark-mode{
+  background:#1e1e1e;
+  color:white;
+}
+
+.dark-mode .container,
+.dark-mode .diet-card{
+  background:#2c2c2c;
+}
+
+/* Spinner */
+.spinner{
+  border:4px solid #f3f3f3;
+  border-top:4px solid white;
+  border-radius:50%;
+  width:20px;
+  height:20px;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  100%{ transform:rotate(360deg); }
+}
+
+/* Toast */
+.toast-custom{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#4CAF50;
+  color:white;
+  padding:12px 20px;
+  border-radius:5px;
+}
+
+/* Calories tracker styles */
+.cal-table td, .cal-table th{vertical-align:middle}
+.progress-small{height:18px}
+.feature-box a{display:inline-block;margin-top:10px}
+
+/* Calories tracker visuals */
+.calories-hero{background:linear-gradient(90deg,#7b61ff,#ff7ab6);color:white;padding:18px;border-radius:12px;margin-bottom:18px}
+.summary-card{background:linear-gradient(180deg,#ffffff,#f7fbff);border-radius:12px;padding:20px}
+.cal-card{background:linear-gradient(180deg,#fff,#f1f9ff);border-radius:12px;box-shadow:0 6px 18px rgba(12,20,30,0.15)}
+.cal-table tbody tr:hover{background:rgba(0,0,0,0.02)}
+.cal-table td, .cal-table th{vertical-align:middle}
+.progress .progress-bar{background:#0d6efd}
+.cal-title{font-weight:700}
+
+/* Illustration styling */
+.img-illustration{max-width:520px;width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(12,20,40,0.12)}

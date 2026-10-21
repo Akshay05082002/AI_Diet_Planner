@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+frontend/venv/
+
+# Node dependencies
+node_modules/
+api/node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database & local data
+instance/*.db
+*.sqlite3
+instance/uploads/
+api/uploads/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Backup files
+*.bak
+templates/*.bak
+templates/*_old.*
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

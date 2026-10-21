@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | AI Diet Planner{% endblock %}
+
+{% block extra_head %}
+<style>
+.dashboard-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-topbar h1 {
+  color: #102a43;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.dashboard-topbar .logout-btn {
+  border-radius: 12px;
+}
+
+.header-box {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  padding: 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 18px 45px rgba(59, 130, 246, 0.18);
+}
+
+.header-box h2,
+.header-box p {
+  color: #ffffff;
+}
+
+.dashboard-card {
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: #102a43;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-topbar">
+  <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="/logout" class="btn btn-danger logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+  </div>
+</div>
+
+<div class="header-box mb-4">
+  <h2>Welcome, {{ fullname }} 👋</h2>
+  <p class="text-muted">Your personal fitness dashboard</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card dashboard-card shadow p-4 mb-4">
+      <h4><i class="fa-solid fa-heart-pulse text-danger"></i> Health Report</h4>
+      <hr>
+      <p class="fs-5"><b>BMI:</b> {{ bmi }} <span class="badge bg-info">{{ bmi_cat }}</span></p>
+      <p class="fs-5"><b>Target Calories:</b> {{ cal_target }} kcal</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card dashboard-card shadow p-4 mb-4">
+      <h4><i class="fa-solid fa-chart-line text-success"></i> Fitness Status</h4>
+      <hr>
+      <p class="text-muted">Stay consistent with your diet and exercise plan to reach your goal faster.</p>
+      <p class="text-muted">Generate your personalized AI diet plan to maintain a healthy lifestyle.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row gy-4 mt-1">
+  <div class="col-12">
+    <div class="card dashboard-card p-4 shadow-sm">
+      <h4 class="mb-3">Quick Actions</h4>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="/generate_plan" class="btn btn-success btn-lg btn-custom"><i class="fa-solid fa-robot me-2"></i>Generate AI Diet Plan</a>
+        <a href="/profile" class="btn btn-primary btn-lg btn-custom"><i class="fa-solid fa-user me-2"></i>Update Profile</a>
+        <a href="/calories" class="btn btn-warning btn-lg btn-custom"><i class="fa-solid fa-fire me-2"></i>Calories Tracker</a>
+        <a href="/logout" class="btn btn-danger btn-lg btn-custom"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}

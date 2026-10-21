@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Profile | AI Diet Planner{% endblock %}
+
+{% block content %}
+<div class="section-title">Health Profile</div>
+<p class="text-muted mb-4">Update your personal health information.</p>
+
+<div class="profile-card p-4">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Age</label>
+        <input class="form-control" type="number" name="age" required value="{{ existing.age if existing else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Gender</label>
+        <select class="form-control" name="gender" required>
+          <option value="male" {% if existing and existing.gender=='male' %}selected{% endif %}>Male</option>
+          <option value="female" {% if existing and existing.gender=='female' %}selected{% endif %}>Female</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+      <div class="col-md-6">
+        <label class="form-label">Height (cm)</label>
+        <input class="form-control" type="number" name="height" required value="{{ existing.height if existing else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Weight (kg)</label>
+        <input class="form-control" type="number" name="weight" required value="{{ existing.weight if existing else '' }}">
+      </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+      <div class="col-md-6">
+        <label class="form-label">Activity Level</label>
+        <select class="form-control" name="activity" required>
+          <option value="low" {% if existing and existing.activity=='low' %}selected{% endif %}>Low</option>
+          <option value="medium" {% if existing and existing.activity=='medium' %}selected{% endif %}>Medium</option>
+          <option value="high" {% if existing and existing.activity=='high' %}selected{% endif %}>High</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Goal</label>
+        <select class="form-control" name="goal" required>
+          <option value="loss" {% if existing and existing.goal=='loss' %}selected{% endif %}>Weight Loss</option>
+          <option value="gain" {% if existing and existing.goal=='gain' %}selected{% endif %}>Weight Gain</option>
+          <option value="maintain" {% if existing and existing.goal=='maintain' %}selected{% endif %}>Maintain</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <label class="form-label">Food Preference</label>
+      <select class="form-control" name="preference" required>
+        <option value="veg" {% if existing and existing.preference=='veg' %}selected{% endif %}>Veg</option>
+        <option value="nonveg" {% if existing and existing.preference=='nonveg' %}selected{% endif %}>Non-Veg</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-custom w-100 mt-4">
+      <i class="fa-solid fa-floppy-disk me-2"></i>Save Profile
+    </button>
+  </form>
+</div>
+
+<div class="text-center mt-4">
+  <a href="/dashboard" class="btn btn-success btn-custom m-2">
+    <i class="fa-solid fa-chart-line me-2"></i>Dashboard
+  </a>
+  <a href="/logout" class="btn btn-danger btn-custom m-2">
+    <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+  </a>
+</div>
+{% endblock %}
